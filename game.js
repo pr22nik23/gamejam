@@ -23,7 +23,7 @@ const enemyHealthText = document.querySelector("#enemyHealth")
 const keys = {};
 const player = new Player({
     position: { x: 50, y: canvas.height - 100 },
-    velocity: { x: 7, y: 20 }
+    velocity: { x: 7, y: 15 }
 });
 
 playerArray.push(player)
@@ -66,7 +66,7 @@ window.addEventListener('keyup', (e) => {
     }
     let allFalse = true;
     Object.entries(keys).map(([_, value]) => {
-        if (value == true){
+        if (value == true) {
             allFalse = false
         }
     })
@@ -111,11 +111,11 @@ function calculateFPS() {
 
 function enemyLogic() {
     // if (Math.abs(player.position.x - enemy.position.x) <= 150){
-        // enemy.state = "defence"
-        // enemy.defence()
+    // enemy.state = "defence"
+    // enemy.defence()
     // }else {
-        // enemy.state = "attack"
-        enemy.offence(player, keys)
+    // enemy.state = "attack"
+    enemy.offence(player, keys)
     // }
 
     // console.log(enemy.state)

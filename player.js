@@ -15,7 +15,7 @@ export default class Player {
         this.isJumping = false;
         this.gravity = 10;
         this.jumpStartTime = 0
-        this.jumpDuration = 2000
+        this.jumpDuration = 3500
         this.maxJumps = 2
         this.jumpCounter = 0
         this.groundLevel = canvas.height - this.height; // Assuming the ground is at the bottom of the canvas
@@ -43,16 +43,16 @@ export default class Player {
         this.draw()
         if (keys['KeyA'] && this.position.x > 0) {
             this.direction = "left"
-            if (this.aPressCounter >= 1){
+            if (this.aPressCounter >= 1) {
                 console.log("Test")
-                this.position.x -= 2*this.velocity.x
+                this.position.x -= 2 * this.velocity.x
             }
             this.position.x -= this.velocity.x;
         }
         if (keys['KeyD'] && this.position.x + this.width < canvas.width) {
             this.direction = "right"
-            if (this.dPressCounter >= 1){
-                this.position.x += 2*this.velocity.x
+            if (this.dPressCounter >= 1) {
+                this.position.x += 2 * this.velocity.x
             }
             this.position.x += this.velocity.x;
         }
@@ -66,21 +66,21 @@ export default class Player {
                 this.sword.isSwinging = true
                 this.sword.swingFrame++;
                 if (this.direction == "right") {
-                    this.sword.update(this.position.x + this.width, this.position.y + this.height/2)
-                    this.sword.swing(this.position.x + this.width, this.position.y + this.height/2)
+                    this.sword.update(this.position.x + this.width, this.position.y + this.height / 2)
+                    this.sword.swing(this.position.x + this.width, this.position.y + this.height / 2)
                 } else {
-                    this.sword.update(this.position.x - this.width, this.position.y + this.height/2)
-                    this.sword.swing(this.position.x - this.width, this.position.y + this.height/2)
+                    this.sword.update(this.position.x - this.width, this.position.y + this.height / 2)
+                    this.sword.swing(this.position.x - this.width, this.position.y + this.height / 2)
 
                 }
-                if (this.sword.swingFrame == 1){
+                if (this.sword.swingFrame == 1) {
                     setTimeout(() => {
                         this.sword.swingFrame = 0
                     }, 1000)
                 }
             }
-        } 
-        
+        }
+
         if (this.isJumping) {
             const timeElapsed = performance.now() - this.jumpStartTime;
             if (timeElapsed < this.jumpDuration) {
