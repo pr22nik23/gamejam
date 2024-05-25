@@ -17,7 +17,7 @@ export default class Enemy {
         this.maxJumps = 2
         this.jumpCounter = 0
         this.groundLevel = canvas.height - this.height; // Assuming the ground is at the bottom of the canvas
-        this.sword = new SwordEntity(50, 10, 10, this, 10)
+        this.sword = new SwordEntity(50, 10, 10, this, 20)
         this.direction = "right"
         this.wPressed = false;
         this.aPressCounter = 0;
@@ -37,16 +37,17 @@ export default class Enemy {
         this.forceLeft = true;
         this.forceRight = true;
         this.doubleJump = false;
+        this.hullumajaState = false;
     }
 
     draw() {
-        ctx.fillStyle = "green";
-        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+        // ctx.fillStyle = "green";
+        // ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
         updateAnimation();
         // Adjusting sprite to align with the player hitbox
         const spriteX = this.position.x - (scaledWidth - this.width) / 2; // Centering the sprite horizontally
         const spriteY = this.position.y - (scaledHeight - this.height); // Aligning the sprite vertically
-        drawEnemyFrame(ctx, cycleLoop[currentLoopIndex], 0, spriteX, spriteY);
+        drawEnemyFrame(ctx, cycleLoop[currentLoopIndex], 0, spriteX, spriteY, this);
     }
 
     update() {
@@ -54,7 +55,6 @@ export default class Enemy {
         if (performance.now() - this.lastJumped >= this.jumpCoolDown) {
             this.lastJumped = performance.now()
             this.isJumping = true
-            console.log("Jumped")
         }
         this.jump()
     }
@@ -63,11 +63,10 @@ export default class Enemy {
 
     }
 
-    offence(player) {
-        let direction = this.position.x > player.position.x ? 'left' : "right"
-        // console.log(direction)
+    offence(player, keys) {
         console.log(this.state)
-        // let rNumber = Math.random() * 100 + 350
+        let pDirection = this.position.x > player.position.x ? 'left' : "right"
+        // console.log(direction)
         if (performance.now() - this.lastCalcCoords >= 1000) {
             // console.log("THIS IS TEST")
             this.randomNumber = Math.random() * 100 + 250;
@@ -79,16 +78,28 @@ export default class Enemy {
                 if (!this.checkBorder(this.position.x - this.velocity.x)) {
 
                     this.position.x -= this.velocity.x;
+                    this.direction = "left"
                 }
             } else {
                 if (!this.checkBorder(this.position.x + this.velocity.x)) {
                     this.position.x += this.velocity.x;
-
+                    this.direction = "right"
                 }
             }
             if (Math.abs(player.position.x - this.position.x) < this.sword.width - 10) {
                 // console.log("YEP YOU ARE DED MY FRIEND")
-                this.sword.swing(this.position.x, this.position.y)
+                if (this.direction == "right") {
+                    this.sword.update(this.position.x + this.width, this.position.y + this.height/2)
+                    this.sword.swing(this.position.x + this.width, this.position.y + this.height/2)
+                } else {
+                    this.sword.update(this.position.x - this.width, this.position.y + this.height/2)
+                    this.sword.swing(this.position.x - this.width, this.position.y + this.height/2)
+                }
+                if (this.sword.swingFrame == 1){
+                    setTimeout(() => {
+                        this.sword.swingFrame = 0
+                    }, 1000)
+                }
                 this.lastStrike = performance.now()
                 this.stikeCooldown = Math.random() * 5000 + 1000
                 this.state = "defence"
@@ -97,23 +108,27 @@ export default class Enemy {
             if (performance.now() - this.lastStrike >= this.stikeCooldown) {
                 this.state = "attack"
             }
-            if (direction == "right") {
+            if (pDirection == "right") {
                 if (!this.checkBorder(this.position.x - this.velocity.x)) {
                     this.position.x -= this.velocity.x
+                    this.direction = "left"
                 }
             } else {
                 if (!this.checkBorder(this.position.x + this.velocity.x)) {
                     this.position.x += this.velocity.x
+                    this.direction = "right"
                 }
             }
         } else if (this.state == "moveLeft") {
             // this.jumpCoolDown = 2000
             if (this.position.x - player.position.x > 200) {
                 this.position.x -= this.velocity.x
+                this.direction = "left"
+
                 if (this.forceLeft) {
                     this.forceLeft = false
                     setTimeout(() => {
-                        this.state = "defence"
+                        this.state = "hullumaja"
                         this.forceLeft = true;
                     }, 1000)
                 }
@@ -126,10 +141,12 @@ export default class Enemy {
                     this.doubleJump = false
                 }
                 this.position.x -=  this.velocity.x
+                this.direction = "left"
+
                 if (this.forceLeft){
                     this.forceLeft = false
                     setTimeout(() => {
-                        this.state = "defence"
+                        this.state = "hullumaja"
                         this.forceJump = true;
                         this.forceLeft = true;
                     }, 200)
@@ -140,12 +157,13 @@ export default class Enemy {
             // if (this.position.x ) 
 
         } else if (this.state == "moveRight") {
-            if (this.position.x - player.position.x < 200) {
+            if (this.position.x - player.position.x < -200) {
                 this.position.x += this.velocity.x
+                this.direction = "right"
                 if (this.forceRight) {
                     this.forceRight = false
                     setTimeout(() => {
-                        this.state = "defence"
+                        this.state = "hullumaja"
                         this.forceRight = true;
                     }, 1000)
                 }
@@ -158,21 +176,44 @@ export default class Enemy {
                     this.doubleJump = false
                 }
                 this.position.x += this.velocity.x
+                this.direction = "right"
+
                 if (this.forceRight){
                     this.forceRight = false
                     setTimeout(() => {
-                        this.state = "defence"
+                        this.state = "hullumaja"
                         this.forceJump = true;
                         this.forceRight = true;
                     }, 200)
                 }
             }
 
-        } else {
+        } else if (this.state == "hullumaja") {
+            if (Math.abs(this.position.x - player.position.x) <= 200) {
+                this.state = "defence"
+            }
+            if (!this.hullumajaState){
+                this.hullumajaState = true
+                setTimeout(() => {
+                    this.state = "defence"
+                    this.hullumajaState = false
+                }, 1000)
+            }
+            if(keys['KeyA']){
+                if(!this.checkBorder(this.position.x - this.velocity.x)){
+                    this.position.x -= this.velocity.x
+                    this.direction = "left"
+                }
+            }else if (keys['KeyD']){
+                if(!this.checkBorder(this.position.x + this.velocity.x)){
+                    this.position.x += this.velocity.x
+                    this.direction = "right"
+                }
+            }
+        }else {
             if (player.position.x < this.position.x && player.position.x + 350 < this.position.x) {
                 if (!this.isStriking) {
                     setTimeout(() => {
-                        console.log("Striking")
                         this.state = "attack"
                     }, `${Math.random() * 10000 + 1000}`)
                 }
@@ -180,12 +221,16 @@ export default class Enemy {
                 // setTimeout(() => {
                 // console.log("TIMEOUT")
                 if (!this.checkBorder(this.position.x - this.velocity.x)) {
-                    this.position.x -= this.velocity.x;
+                    // this.position.x -= this.velocity.x;
+                    this.state = "moveLeft"
+
                 }
                 // }, 450)
             } else {
                 if (!this.checkBorder(this.position.x + this.velocity.x)) {
-                    this.position.x += this.velocity.x;
+                    // this.position.x += this.velocity.x;
+                    this.state = "moveRight"
+
                 }
             }
 
@@ -210,15 +255,17 @@ export default class Enemy {
             const timeElapsed = performance.now() - this.lastJumped;
             if (timeElapsed < this.jumpDuration) {
                 this.jumpCounter++;
+                if(this.position.y - this.velocity.y >= 0){
+                    this.position.y -= this.velocity.y
+                    if (this.jumpCounter == 1 && Math.random() > 0.7 || this.doubleJump == true) {
+                        setTimeout(() => {
+                if(this.position.y - this.velocity.y >= 0){
 
-                this.position.y -= this.velocity.y
-                if (this.jumpCounter == 1 && Math.random() > 0.7 || this.doubleJump == true) {
-                    console.log("Doulbe jump")
-                    setTimeout(() => {
-                        this.position.y -= this.velocity.y
-                        this.lastJumped = performance.now()
-
-                    }, Math.random() * 500 + 100)
+                            this.position.y -= this.velocity.y
+                            this.lastJumped = performance.now()
+                }    
+                        }, Math.random() * 500 + 100)
+                    }
                 }
             }
         }

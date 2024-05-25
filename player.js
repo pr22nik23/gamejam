@@ -20,7 +20,7 @@ export default class Player {
         this.jumpCounter = 0
         this.groundLevel = canvas.height - this.height; // Assuming the ground is at the bottom of the canvas
         this.sword = new SwordEntity(50, 10, 10, this, 20)
-        this.direction = "right"
+        this.direction = "idle"
         this.wPressed = false;
         this.aPressCounter = 0;
         this.dPressCounter = 0;
@@ -30,13 +30,13 @@ export default class Player {
     }
 
     draw() {
-        ctx.fillStyle = "red";
-        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+        // ctx.fillStyle = "red";
+        // ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
         updateAnimation();
-        // Adjusting sprite to align with the player hitbox
+        // // Adjusting sprite to align with the player hitbox
         const spriteX = this.position.x - (scaledWidth - this.width) / 2; // Centering the sprite horizontally
         const spriteY = this.position.y - (scaledHeight - this.height); // Aligning the sprite vertically
-        drawPlayerFrame(ctx, cycleLoop[currentLoopIndex], 0, spriteX, spriteY);
+        drawPlayerFrame(ctx, cycleLoop[currentLoopIndex], 0, spriteX, spriteY, this);
     }
 
     update(keys) {
@@ -52,7 +52,6 @@ export default class Player {
         if (keys['KeyD'] && this.position.x + this.width < canvas.width) {
             this.direction = "right"
             if (this.dPressCounter >= 1){
-                console.log("Test")
                 this.position.x += 2*this.velocity.x
             }
             this.position.x += this.velocity.x;

@@ -1,6 +1,8 @@
 import { currentLoopIndex, cycleLoop } from "./animation.js"; // Importing animation functions and variables
 import Enemy from "./enemy.js";
 import Player from "./player.js";
+let background = new Image()
+background.src = 'models/vector-mountain-illustration-game-background_303920-21.avif'
 
 export const canvas = document.getElementById('gameCanvas');
 export const ctx = canvas.getContext('2d');
@@ -15,6 +17,8 @@ let fps = 0;
 export let playerArray = []
 export let enemiesArray = []
 
+const playerHealthText = document.querySelector("#playerHealth")
+const enemyHealthText = document.querySelector("#enemyHealth")
 
 const keys = {};
 const player = new Player({
@@ -60,16 +64,29 @@ window.addEventListener('keyup', (e) => {
             }, 250)
         }
     }
+    let allFalse = true;
+    Object.entries(keys).map(([_, value]) => {
+        if (value == true){
+            allFalse = false
+        }
+    })
+    if (allFalse) {
+        player.direction = "idle"
+    }
 });
 
 
 
 function render() {
-    ctx.fillStyle = "grey"
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-    // ctx.fillStyle = player.color;
+    // ctx.fillStyle = "grey"
+    // ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
+    ctx.fillStyle = player.color;
     player.update(keys)
     enemy.update()
+    playerHealthText.innerHTML = `${player.health}`
+    enemyHealthText.innerHTML = `${enemy.health}`
 
     // // Draw Player 1's Sword
     // if (player.sword.isSwinging) {
@@ -98,7 +115,7 @@ function enemyLogic() {
         // enemy.defence()
     // }else {
         // enemy.state = "attack"
-        enemy.offence(player)
+        enemy.offence(player, keys)
     // }
 
     // console.log(enemy.state)
