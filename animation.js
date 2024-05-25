@@ -1,105 +1,107 @@
-// animation.js
+let enemyImg = new Image();
+enemyImg.src = 'models/enemy1.png';
 
-let pIdle = new Image();
-pIdle.src = 'models/pIdle.png';
-
-let eIdle = new Image();
-eIdle.src = 'models/eIdle.png';
-
-let pRun = new Image();
-pRun.src = 'models/pRun.png';
-
-let eRun = new Image();
-eRun.src = 'models/eRun.png';
-
-export const scale = 1.6; // Adjusted scale to match player hitbox
-export const width = 128;
-export const height = 128;
+const scale = 2; // Adjusted scale to match enemy hitbox
+const width = 128;
+const height = 130;
 export const scaledWidth = scale * width;
 export const scaledHeight = scale * height;
 
-export const cycleLoop = [0, 1, 0, 2];
-export let currentLoopIndex = 0;
-export let frameCountAnim = 0;
+
+const moveCycle = [0, 1, 2, 3, 4, 5, 6, 7]; // Frames for idle animation
+const idleCycle = [0, 1, 2, 3, 4, 5, 6] // Frames for run animation
+const attackCycle = [0, 1, 2, 3]; // Frames for attack animation
+const jumpCycle = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]; // Frames for jump animation
+const deathCycle = [0, 1, 2, 3]; // Frames for jump animation
+const hurtCycle = [0, 1]
 
 
-pRun.onload = function() {
-    console.log("Playermodel loaded.");
-};
 
-eRun.onload = function() {
-    console.log("Enemymodel loaded.");
-};
+// export let currentLoopIndex = 0;
 
 
-// playerImg.onload = function() {
-//     console.log("Spritesheet loaded.");
-// };
+const pasahunnik = { "direction": 1000, "swing": 400, "jump": 1000, "death": 1000 }
 
-// export function drawFrame(ctx, frameX, frameY, canvasX, canvasY) {
-//     ctx.drawImage(playerImg,
-//         frameX * width, frameY * height, width, height,
-//         canvasX, canvasY, scaledWidth, scaledHeight);
-// }y
+export function drawEnemyFrame(ctx, canvasX, canvasY, enemy) {
+    const { cycle, rowOffset } = getAnimationCycle(enemy);
 
-export function drawPlayerFrame(ctx, frameX, frameY, canvasX, canvasY, player) {
-    if (player.isJumping) {
+    const frame = cycle[enemy.currentLoopIndex];
+    const column = frame % 16;
+    const row = rowOffset; // Use the row offset based on the enemy's state
 
-    } else if (player.direction == "left") {
+    if (enemy.direction === 'left') {
         ctx.save(); // Save the current transformation matrix
         ctx.translate(canvasX + scaledWidth, canvasY); // Move the origin to the top-right corner of the sprite
         ctx.scale(-1, 1); // Scale the context horizontally by -1 to flip the image
-        ctx.drawImage(pRun,
-            frameX * width, frameY * height, width, height,
-            0, 0, scaledWidth, scaledHeight); // Draw the image at the flipped position
+        drawFrame(ctx, enemyImg, column, row, 0, 0);
         ctx.restore(); // Restore the previous transformation matrix
-
-    } else if (player.direction == "right") {
-        ctx.drawImage(pRun,
-            frameX * width, frameY * height, width, height,
-            canvasX, canvasY, scaledWidth, scaledHeight);
     } else {
-        ctx.drawImage(pIdle,
-            frameX * width, frameY * height, width, height,
-            canvasX, canvasY, scaledWidth, scaledHeight);
-    }
-}
-
-export function drawEnemyFrame(ctx, frameX, frameY, canvasX, canvasY, enemy) {
-    if (enemy.direction == "left") {
-        ctx.save(); // Save the current transformation matrix
-        ctx.translate(canvasX + scaledWidth, canvasY); // Move the origin to the top-right corner of the sprite
-        ctx.scale(-1, 1); // Scale the context horizontally by -1 to flip the image
-        ctx.drawImage(eRun,
-            frameX * width, frameY * height, width, height,
-            0, 0, scaledWidth, scaledHeight); // Draw the image at the flipped position
-        ctx.restore(); // Restore the previous transformation matrix
-
-    } else if (enemy.direction == "right") {
-        ctx.drawImage(eRun,
-            frameX * width, frameY * height, width, height,
-            canvasX, canvasY, scaledWidth, scaledHeight);
-    } else if (enemy.isJumping) {
-
-    }else {
-            ctx.save(); // Save the current transformation matrix
-            ctx.translate(canvasX + scaledWidth, canvasY); // Move the origin to the top-right corner of the sprite
-            ctx.scale(-1, 1); // Scale the context horizontally by -1 to flip the image
-            ctx.drawImage(eIdle,
-                frameX * width, frameY * height, width, height,
-                0, 0, scaledWidth, scaledHeight); // Draw the image at the flipped position
-            ctx.restore(); // Restore the previous transformation matrix
+        drawFrame(ctx, enemyImg, column, row, canvasX, canvasY);
     }
 }
 
 
-export function updateAnimation() {
-    if (frameCountAnim >= 20) {  // Adjust the frame rate of the animation here
-        frameCountAnim = 0;
-        currentLoopIndex++;
-        if (currentLoopIndex >= cycleLoop.length) {
-            currentLoopIndex = 0;
+export function drawFrame(ctx, img, frameX, frameY, canvasX, canvasY) {
+    ctx.drawImage(img,
+        frameX * width, frameY * height, width, height,
+        canvasX, canvasY, scaledWidth, scaledHeight);
+}
+
+
+function getAnimationCycle(enemy) {
+    if (enemy.liveState == "death") {
+        if (enemy.firstDeath) {
+            enemy.firstDeath = false
+            enemy.currentLoopIndex = 0
         }
+        return { cycle: deathCycle, rowOffset: 3, style: "death" };
     }
-    frameCountAnim++;
+    if (enemy.sword.isSwinging || !enemy.isStalled) {
+        if (enemy.firstSwing) {
+            enemy.firstSwing = false
+            enemy.currentLoopIndex = 0
+        }
+        return { cycle: attackCycle, rowOffset: 5, style: "swing" };
+    }
+    if (enemy.isJumping) {
+        if (enemy.firstJump) {
+            enemy.firstJump = false
+            enemy.currentLoopIndex = 0
+        }
+        enemy.firstSwing = true
+        enemy.firstDirection = true
+
+        return { cycle: jumpCycle, rowOffset: 1, style: "jump" };
+    }else if (enemy.direction === "left" || enemy.direction === "right") {
+        if (enemy.firstDirection) {
+            enemy.firstDirection = false
+            enemy.currentLoopIndex = 0
+        }
+        enemy.firstJump = true
+        enemy.firstSwing = true
+        return { cycle: moveCycle, rowOffset: 0, style: "direction" };
+    }
+}
+
+
+export function updateAnimation(enemy) {
+    const { cycle, style } = getAnimationCycle(enemy);
+
+    const t = pasahunnik[style]
+    const timePerFrame = t / cycle.length;
+
+    const now = performance.now();
+
+    const elapsed = now - enemy.lastFrame;
+
+    if (elapsed >= timePerFrame) {
+        if (!(enemy.currentLoopIndex == 3 && enemy.liveState == "death")){
+            enemy.currentLoopIndex++;
+        }
+        if (enemy.currentLoopIndex >= cycle.length) {
+            enemy.currentLoopIndex = 0;
+        }
+
+        enemy.lastFrame = now;
+    }
 }

@@ -10,3 +10,18 @@ export function isCollision(rect1, rect2) {
        return false
       }
 }
+
+var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+export function playSound(soundName) {
+  fetch(soundName)
+      .then(response => response.arrayBuffer())
+      .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+      .then(audioBuffer => {
+          var source = audioContext.createBufferSource();
+          source.buffer = audioBuffer;
+          source.connect(audioContext.destination);
+          source.start(0);
+      })
+      .catch(e => console.error('Error with fetching or decoding audio data: ' + e));
+}

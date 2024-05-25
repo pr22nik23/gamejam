@@ -1,6 +1,6 @@
-import { canvas, ctx, enemiesArray, playerArray } from "./game.js"
+import { canvas, ctx } from "./game.js"
 import SwordEntity from "./swordProps.js"
-import { drawEnemyFrame, updateAnimation, cycleLoop, currentLoopIndex, scaledWidth, scaledHeight } from "./animation.js";
+import { drawEnemyFrame, updateAnimation, scaledWidth, scaledHeight } from "./animation.js";
 
 
 export default class Enemy {
@@ -17,7 +17,7 @@ export default class Enemy {
         this.maxJumps = 2
         this.jumpCounter = 0
         this.groundLevel = canvas.height - this.height; // Assuming the ground is at the bottom of the canvas
-        this.sword = new SwordEntity(50, 10, 10, this, 20)
+        this.sword = new SwordEntity(80, 10, 10, this, 20)
         this.direction = "right"
         this.wPressed = false;
         this.aPressCounter = 0;
@@ -38,16 +38,26 @@ export default class Enemy {
         this.forceRight = true;
         this.doubleJump = false;
         this.hullumajaState = false;
+        this.firstJump = true
+        this.firstSwing = true
+        this.firstDirection = true
+        this.firstElse = true
+        this.firstDying = true
+        this.isStalled = true
+        this.stallCooldown = 400
+        this.liveState = "alive"
+        this.currentLoopIndex = 0;
+        this.lastFrame = 0;
     }
 
     draw() {
-        // ctx.fillStyle = "green";
-        // ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
-        updateAnimation();
+        ctx.fillStyle = "green";
+        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+        updateAnimation(this);
         // Adjusting sprite to align with the player hitbox
         const spriteX = this.position.x - (scaledWidth - this.width) / 2; // Centering the sprite horizontally
         const spriteY = this.position.y - (scaledHeight - this.height); // Aligning the sprite vertically
-        drawEnemyFrame(ctx, cycleLoop[currentLoopIndex], 0, spriteX, spriteY, this);
+        drawEnemyFrame(ctx, spriteX, spriteY, this);
     }
 
     update() {
@@ -59,21 +69,18 @@ export default class Enemy {
         this.jump()
     }
 
-    defence() {
-
-    }
-
+ 
     offence(player, keys) {
-        console.log(this.state)
+        if (this.liveState == "death") {
+            this.jumpCoolDown = 99999999999999;
+            return
+        }
         let pDirection = this.position.x > player.position.x ? 'left' : "right"
-        // console.log(direction)
         if (performance.now() - this.lastCalcCoords >= 1000) {
-            // console.log("THIS IS TEST")
             this.randomNumber = Math.random() * 100 + 250;
             this.lastCalcCoords = performance.now()
         }
         if (this.state == "attack") {
-            // console.log("YEP ITS OVER FOR YA")
             if (player.position.x < this.position.x) {
                 if (!this.checkBorder(this.position.x - this.velocity.x)) {
 
@@ -86,23 +93,30 @@ export default class Enemy {
                     this.direction = "right"
                 }
             }
-            if (Math.abs(player.position.x - this.position.x) < this.sword.width - 10) {
-                // console.log("YEP YOU ARE DED MY FRIEND")
+            if (Math.abs(player.position.x - this.position.x) < this.sword.width) {
+                this.sword.isSwinging = true
+                setTimeout(() => {
+                    console.log("YEp this is correct")
+                    this.sword.isSwinging = false
+                }, 300)
                 if (this.direction == "right") {
-                    this.sword.update(this.position.x + this.width, this.position.y + this.height / 2)
-                    this.sword.swing(this.position.x + this.width, this.position.y + this.height / 2)
+                    this.sword.update(this.position.x + this.width, this.position.y )
+                    this.sword.swing(this.position.x + this.width, this.position.y )
                 } else {
-                    this.sword.update(this.position.x - this.width, this.position.y + this.height / 2)
-                    this.sword.swing(this.position.x - this.width, this.position.y + this.height / 2)
+                    this.sword.update(this.position.x - this.width, this.position.y )
+                    this.sword.swing(this.position.x - this.width, this.position.y )
                 }
                 if (this.sword.swingFrame == 1) {
                     setTimeout(() => {
                         this.sword.swingFrame = 0
                     }, 1000)
+                    setTimeout(() => {
+                        this.sword.isSwinging = false
+                    }, 200)
                 }
                 this.lastStrike = performance.now()
                 this.stikeCooldown = Math.random() * 5000 + 1000
-                this.state = "defence"
+                this.state = "stall"
             }
         } else if (this.state == "defence") {
             if (performance.now() - this.lastStrike >= this.stikeCooldown) {
@@ -153,8 +167,6 @@ export default class Enemy {
                 }
 
             }
-
-            // if (this.position.x ) 
 
         } else if (this.state == "moveRight") {
             if (this.position.x - player.position.x < -200) {
@@ -210,7 +222,15 @@ export default class Enemy {
                     this.direction = "right"
                 }
             }
-        } else {
+        } else if (this.state == "stall") {
+            if (this.isStalled){
+                this.isStalled = false
+                setTimeout(() => {
+                    this.isStalled = true
+                    this.state = "defence"
+                }, this.stallCooldown)
+            }
+        }else {
             if (player.position.x < this.position.x && player.position.x + 350 < this.position.x) {
                 if (!this.isStriking) {
                     setTimeout(() => {
