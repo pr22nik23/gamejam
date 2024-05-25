@@ -44,7 +44,6 @@ export default class Player {
         if (keys['KeyA'] && this.position.x > 0) {
             this.direction = "left"
             if (this.aPressCounter >= 1) {
-                console.log("Test")
                 this.position.x -= 2 * this.velocity.x
             }
             this.position.x -= this.velocity.x;
@@ -68,10 +67,11 @@ export default class Player {
                 if (this.direction == "right") {
                     this.sword.update(this.position.x + this.width, this.position.y + this.height / 2)
                     this.sword.swing(this.position.x + this.width, this.position.y + this.height / 2)
-                } else {
+                } else if (this.direction == "left"){
                     this.sword.update(this.position.x - this.width, this.position.y + this.height / 2)
                     this.sword.swing(this.position.x - this.width, this.position.y + this.height / 2)
-
+                }else {
+                    
                 }
                 if (this.sword.swingFrame == 1) {
                     setTimeout(() => {

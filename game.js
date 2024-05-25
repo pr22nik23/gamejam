@@ -30,7 +30,7 @@ playerArray.push(player)
 
 const enemy = new Enemy({
     position: { x: canvas.width - 100, y: canvas.height - 100 },
-    velocity: { x: 7, y: 20 }
+    velocity: { x: 10, y: 20 }
 })
 
 enemiesArray.push(enemy)
