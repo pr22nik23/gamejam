@@ -49,7 +49,7 @@ export default class SwordEntity {
         } else if (this.parent.type == "enemy") {
             playerArray.forEach((player) => {
                 if(isCollision({x: player.position.x, y: player.position.y, w: player.width, h: player.height}, {x: x, y: y, w: this.width, h: this.height})){
-                    playSound("https://pr22nik23.github.io/sounds/knife_stab.mp3", { volume: 0.25 })
+                    playSound("/sounds/knife_stab.mp3", { volume: 0.25 })
                     if (player.health - this.damage <= 0) {
                         player.state = "dying"
                         endScreen.classList.remove('hidden')
@@ -57,7 +57,7 @@ export default class SwordEntity {
                     createHitParticles(player.position.x + 30, player.position.y + 20)
                     player.health -= this.damage
                 }else {
-                    playSound("https://pr22nik23.github.io/sounds/knife_slash.wav", { volume: 0.25 })
+                    playSound("/sounds/knife_slash.wav", { volume: 0.25 })
                 }
             })
         }

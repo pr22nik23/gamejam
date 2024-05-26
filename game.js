@@ -12,14 +12,14 @@ overlay.src = "./models/overlay4.png"
 
 enemyImg1.src = '/models/enemy1.png'
 
-enemyImg2.src = 'https://pr22nik23.github.io/models/enemy3.png'
+enemyImg2.src = '/models/enemy3.png'
 
-background.src = 'https://pr22nik23.github.io/models/kood-final2.png'
+background.src = '/models/kood-final2.png'
 background.onload = () => {
     beforeGame()
 
 // startGame()
-playSound('https://pr22nik23.github.io/sounds/theme.mp3', { volume: 0.3 })
+playSound('/sounds/theme.mp3', { volume: 0.3 })
 
 }
 export let gameStart = false;
@@ -174,7 +174,7 @@ let firstRound = true
 function levelLoop() {
     if (enemiesArray.length == 0 && !isSpawning) {
         if (!firstRound){
-            playSound(`https://pr22nik23.github.io/sounds/${Math.floor(Math.random() * 5) + 1}.wav`, { volume: 0.8 })
+            playSound(`/sounds/${Math.floor(Math.random() * 5) + 1}.wav`, { volume: 0.8 })
         }
         firstRound= false
         isSpawning = true
@@ -301,7 +301,7 @@ function beforeGame() {
         setTimeout(() => {
             if (i == 9) {
                 gameStart = true
-                playSound('https://pr22nik23.github.io/sounds/fight.wav', { volume: 0.4 })
+                playSound('/sounds/fight.wav', { volume: 0.4 })
 
                 startGame()
             }

@@ -1,5 +1,5 @@
 let playerImg = new Image();
-playerImg.src = 'https://pr22nik23.github.io/models/obi.png';
+playerImg.src = '/models/obi.png';
 
 const scale = 2.7; // Adjusted scale to match player hitbox
 const width = 100; // Width of each sprite frame
