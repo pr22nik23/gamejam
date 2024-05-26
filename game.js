@@ -9,9 +9,19 @@ let enemyImg2 = new Image();
 export let overlay = new Image()
 overlay.src = "/models/overlay4.png"
 
+
 enemyImg1.src = 'models/enemy1.png'
+
 enemyImg2.src = 'models/enemy3.png'
+
 background.src = 'models/kood-final.png'
+background.onload = () => {
+    beforeGame()
+
+// startGame()
+playSound('/sounds/theme.mp3', { volume: 0.3 })
+
+}
 export let gameStart = false;
 
 export const canvas = document.getElementById('gameCanvas');
@@ -374,7 +384,7 @@ function displayInfo(message, delay, color) {
 }
 
 
-beforeGame()
+// beforeGame()
 
-// startGame()
-playSound('/sounds/theme.mp3', { volume: 0.3 })
+// // startGame()
+// playSound('/sounds/theme.mp3', { volume: 0.3 })
