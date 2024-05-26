@@ -174,7 +174,7 @@ let firstRound = true
 function levelLoop() {
     if (enemiesArray.length == 0 && !isSpawning) {
         if (!firstRound){
-            playSound(`/sounds/${Math.floor(Math.random() * 5) + 1}.wav`, { volume: 0.8 })
+            playSound(`./sounds/${Math.floor(Math.random() * 5) + 1}.wav`, { volume: 0.8 })
         }
         firstRound= false
         isSpawning = true
@@ -301,7 +301,7 @@ function beforeGame() {
         setTimeout(() => {
             if (i == 9) {
                 gameStart = true
-                playSound('/sounds/fight.wav', { volume: 0.4 })
+                playSound('./sounds/fight.wav', { volume: 0.4 })
 
                 startGame()
             }
