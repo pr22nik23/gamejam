@@ -17,9 +17,8 @@ enemyImg2.src = './models/enemy3.png'
 background.src = './models/kood-final2.png'
 background.onload = () => {
     beforeGame()
-
-// startGame()
-playSound('./sounds/theme.mp3', { volume: 0.3 })
+    // startGame()
+    playSound('./sounds/theme.mp3', { volume: 0.3 })
 
 }
 export let gameStart = false;
@@ -48,11 +47,11 @@ let fps = 0;
 let timer = 0;
 
 
- let currentLevel = 0;
+let currentLevel = 0;
 
 export let playerArray = []
 export let enemiesArray = []
-        
+
 const keys = {};
 const player = new Player({
     position: { x: 50, y: canvas.height - 100 },
@@ -89,7 +88,7 @@ const stats = new Stats(player, enemiesArray)
 window.addEventListener('keydown', (e) => {
     keys[e.code] = true;
     allButtons.forEach((button) => {
-        if (button.getAttribute('data-value') == e.code){
+        if (button.getAttribute('data-value') == e.code) {
             button.classList.remove("bg-white")
             button.classList.add('bg-[#0CC0DF]')
         }
@@ -99,7 +98,7 @@ window.addEventListener('keydown', (e) => {
 window.addEventListener('keyup', (e) => {
     keys[e.code] = false;
     allButtons.forEach((button) => {
-        if (button.getAttribute('data-value') == e.code){
+        if (button.getAttribute('data-value') == e.code) {
             button.classList.remove("bg-[#0CC0DF]")
             button.classList.add('bg-white')
         }
@@ -108,7 +107,7 @@ window.addEventListener('keyup', (e) => {
         player.jumpCounter++;
         player.wPressed = false
         player.firstJump = true
-    }else if (e.code == 'KeyP'){
+    } else if (e.code == 'KeyP') {
         let enemy = new Enemy({
             position: { x: canvas.width - 100, y: canvas.height - 100 },
             velocity: { x: 1 + currentLevel + 10, y: 20 },
@@ -173,10 +172,10 @@ let isSpawning = false
 let firstRound = true
 function levelLoop() {
     if (enemiesArray.length == 0 && !isSpawning) {
-        if (!firstRound){
+        if (!firstRound) {
             playSound(`./sounds/${Math.floor(Math.random() * 5) + 1}.wav`, { volume: 0.8 })
         }
-        firstRound= false
+        firstRound = false
         isSpawning = true
         //Give player back little bit of health
         player.health += currentLevel * 10
@@ -184,13 +183,13 @@ function levelLoop() {
         //give player speed every 5th round
         levelElement.textContent = `Level: ${currentLevel}`
         currentLevel++
-        if(currentLevel % 4 === 0){
+        if (currentLevel % 4 === 0) {
             // if (!player.dashCooldown >= 1000){
-                player.dashCooldown -= 1000
-                displayInfo("Dash cooldown reduced", 3000, "#FFC107")
+            player.dashCooldown -= 1000
+            displayInfo("Dash cooldown reduced", 3000, "#FFC107")
             // }
         }
-        if(currentLevel % 5 === 0){
+        if (currentLevel % 5 === 0) {
             player.maxJumps++;
             displayInfo("Max jumps increased", 3000, "#FFC107")
         }
@@ -199,27 +198,27 @@ function levelLoop() {
             player.velocity.x += 1
         }
         setTimeout(() => {
-            displayMessage(`LVL ${currentLevel}`, 2000,"#962A45")
+            displayMessage(`LVL ${currentLevel}`, 2000, "#962A45")
 
         }, 1000)
         setTimeout(() => {
-            for(let i = 0; i < currentLevel; i++){
+            for (let i = 0; i < currentLevel; i++) {
                 setTimeout(() => {
                     const randomNumber = Math.random()
                     let enemy;
                     let enemyDMG = 5 + currentLevel * 2
                     let enemyHP = 5 + currentLevel * 5
                     let speed = 1
-                    if (randomNumber > 0.9){
+                    if (randomNumber > 0.9) {
                         speed = 3
                     }
                     if (randomNumber < 0.1) {
                         enemyHP += 50
                     }
-                    if (randomNumber > 0.5){
+                    if (randomNumber > 0.5) {
                         enemy = new Enemy({
                             position: { x: canvas.width - 100, y: canvas.height - 100 },
-                            velocity: { x: 1 + currentLevel +speed, y: 20 },
+                            velocity: { x: 1 + currentLevel + speed, y: 20 },
                             props: {
                                 type: "enemy2",
                                 image: enemyImg2,
@@ -227,7 +226,7 @@ function levelLoop() {
                             damage: enemyDMG,
                             health: enemyHP
                         })
-                    }else {
+                    } else {
                         enemy = new Enemy({
                             position: { x: canvas.width - 100, y: canvas.height - 100 },
                             velocity: { x: 1 + currentLevel + speed, y: 20 },
@@ -251,14 +250,14 @@ function levelLoop() {
 
 function gameLoop() {
     if (gameStart) {
-        
+
         const startTime = performance.now();
-    
+
         render();
         player.update(keys)
         enemiesArray.forEach((e) => {
             e.update()
-            if(player.state == "dying"){
+            if (player.state == "dying") {
                 e.state = "idle"
             }
         })
@@ -270,13 +269,12 @@ function gameLoop() {
         animate()
         const endTime = performance.now();
         const deltaTime = endTime - startTime;
-        const delay = Math.max(0, 1000 / 60 - deltaTime); 
-    
-        setTimeout(gameLoop, delay);        
+        const delay = Math.max(0, 1000 / 60 - deltaTime);
+
+        setTimeout(gameLoop, delay);
     }
 }
 
-render()
 overlay.onload = () => {
     stats.drawHud(timer)
 }
@@ -291,13 +289,14 @@ function startGame() {
 }
 
 function beforeGame() {
+    render()
     // displayMessage("Genobi: gopnik wars", 2000, "#962A45")
     displayMessage("Defend Ida-Virumaa!", 2000, "#962A45")
     setTimeout(() => {
-    displayMessage("May the force be with you!", 2000, "#962A45")
+        displayMessage("May the force be with you!", 2000, "#962A45")
 
     }, 2500)
-    for (let i = 0; i < 10; i++){
+    for (let i = 0; i < 10; i++) {
         setTimeout(() => {
             if (i == 9) {
                 gameStart = true
@@ -305,8 +304,8 @@ function beforeGame() {
 
                 startGame()
             }
-            if (i >= 5){
-                displayMessage(`${10-i}`, 500, "#962A45")
+            if (i >= 5) {
+                displayMessage(`${10 - i}`, 500, "#962A45")
             }
         }, i * 1000)
     }
@@ -322,7 +321,7 @@ function displayMessage(message, delay, color) {
 
     // Apply transition for smooth appearance and disappearance
     messageContainer.style.transition = "opacity 0.5s ease-in, transform 0.5s ease-out";
-    
+
     document.body.appendChild(messageContainer);
 
     // Triggering reflow to make the transition work
@@ -338,7 +337,7 @@ function displayMessage(message, delay, color) {
         // Apply styles for disappearance
         messageContainer.style.opacity = "0";
         messageContainer.style.transform = "translateY(-50%) scale(0.9)";
-        
+
         // Remove the message container after the transition
         setTimeout(() => {
             document.body.removeChild(messageContainer);
@@ -355,7 +354,7 @@ function displayInfo(message, delay, color) {
 
     // Apply transition for smooth appearance and disappearance
     messageContainer.style.transition = "opacity 0.5s ease-in, transform 0.5s ease-out";
-    
+
     document.body.appendChild(messageContainer);
 
     // Triggering reflow to make the transition work
@@ -375,7 +374,7 @@ function displayInfo(message, delay, color) {
         // Apply styles for disappearance
         messageContainer.style.opacity = "0";
         messageContainer.style.transform = "translateY(-20%) scale(0.9)";
-        
+
         // Remove the message container after the transition
         setTimeout(() => {
             document.body.removeChild(messageContainer);
