@@ -109,7 +109,7 @@ export default class Player {
             this.position.x += this.velocity.x;
         }
         if (keys['KeyW'] && this.jumpCounter < this.maxJumps && !this.wPressed) {
-            playSound("/sounds/jump.wav")
+            playSound("https://pr22nik23.github.io/sounds/jump.wav")
             this.wPressed = true
             this.isJumping = true
             this.jumpStartTime = performance.now();
@@ -120,7 +120,7 @@ export default class Player {
             if (!this.sword.isSwinging && this.sword.swingFrame < 1) {
                 this.sword.isSwinging = true
                 this.sword.swingFrame++;
-                playSound("/sounds/lightsaber.mp3", { volume: 0.15, playbackRate: 2})
+                playSound("https://pr22nik23.github.io/sounds/lightsaber.mp3", { volume: 0.15, playbackRate: 2})
                 if (this.direction == "right") {
                     this.sword.update(this.position.x + this.width, this.position.y )
                     this.sword.swing(this.position.x + this.width, this.position.y )

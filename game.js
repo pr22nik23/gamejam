@@ -10,7 +10,7 @@ export let overlay = new Image()
 overlay.src = "./models/overlay4.png"
 
 
-enemyImg1.src = 'https://pr22nik23.github.io/models/enemy1.png'
+enemyImg1.src = '/models/enemy1.png'
 
 enemyImg2.src = 'https://pr22nik23.github.io/models/enemy3.png'
 
@@ -174,7 +174,7 @@ let firstRound = true
 function levelLoop() {
     if (enemiesArray.length == 0 && !isSpawning) {
         if (!firstRound){
-            playSound(`/sounds/${Math.floor(Math.random() * 5) + 1}.wav`, { volume: 0.8 })
+            playSound(`https://pr22nik23.github.io/sounds/${Math.floor(Math.random() * 5) + 1}.wav`, { volume: 0.8 })
         }
         firstRound= false
         isSpawning = true
@@ -301,7 +301,7 @@ function beforeGame() {
         setTimeout(() => {
             if (i == 9) {
                 gameStart = true
-                playSound('/sounds/fight.wav', { volume: 0.4 })
+                playSound('https://pr22nik23.github.io/sounds/fight.wav', { volume: 0.4 })
 
                 startGame()
             }
