@@ -67,12 +67,28 @@ export default class Enemy {
             this.lastJumped = performance.now()
             this.isJumping = true
         }
-        this.jump()
+        if (this.state != "idle"){
+            this.jump()
+            // this.isJumping = false
+        }else if (this.state == "idle") {
+            this.isJumping = false
+            if (this.position.y < this.groundLevel){
+                if (this.position.y + this.velocity.y > this.groundLevel){
+                    this.position.y = this.groundLevel
+                }
+                this.position.y += this.velocity.y
+            }else if (this.position.y > this.groundLevel) {
+                if (this.position.y - this.velocity.y < this.groundLevel){
+                    this.position.y = this.groundLevel
+                }
+                this.position.y -= this.velocity.y
+            }
+        }
     }
 
  
     offence(player, keys) {
-        console.log(this.state)
+        // console.log(this.state)
         if (this.liveState == "death") {
             this.jumpCoolDown = 99999999999999;
             return
@@ -89,7 +105,7 @@ export default class Enemy {
             this.lastCalcCoords = performance.now()
         }
         if (this.state == "attack") {
-            if (player.position.x < this.position.x && Math.abs(player.position.y - this.position.y) <= 250) {
+            if (player.position.x < this.position.x) {
                 if (!this.checkBorder(this.position.x - this.velocity.x)) {
 
                     this.position.x -= this.velocity.x;
@@ -104,7 +120,7 @@ export default class Enemy {
             if (Math.abs(player.position.x - this.position.x) < this.sword.width) {
                 this.sword.isSwinging = true
                 setTimeout(() => {
-                    console.log("YEp this is correct")
+                    // console.log("YEp this is correct")
                     this.sword.isSwinging = false
                 }, 300)
                 if (this.direction == "right") {
@@ -143,7 +159,7 @@ export default class Enemy {
             }
         } else if (this.state == "moveLeft") {
             // this.jumpCoolDown = 2000
-            if (this.position.x - player.position.x > 200 && Math.abs(player.position.y - this.position.y) <= 250) {
+            if (this.position.x - player.position.x > 200) {
                 this.position.x -= 2 * this.velocity.x
                 this.direction = "left"
 
@@ -177,7 +193,7 @@ export default class Enemy {
             }
 
         } else if (this.state == "moveRight") {
-            if (this.position.x - player.position.x < -200 && Math.abs(player.position.y - this.position.y) <= 250) {
+            if (this.position.x - player.position.x < -200) {
                 this.position.x += this.velocity.x
                 this.direction = "right"
                 if (this.forceRight) {
@@ -209,7 +225,7 @@ export default class Enemy {
             }
 
         } else if (this.state == "hullumaja") {
-            if (Math.abs(this.position.x - player.position.x) <= 200 && Math.abs(player.position.y - this.position.y) <= 250) {
+            if (Math.abs(this.position.x - player.position.x) <= 200) {
                 this.state = "defence"
             }
             if (!this.hullumajaState) {
@@ -238,8 +254,10 @@ export default class Enemy {
                     this.state = "defence"
                 }, this.stallCooldown)
             }
-        }else {
-            if (player.position.x < this.position.x && player.position.x + 350 < this.position.x && Math.abs(player.position.y - this.position.y) <= 250) {
+        }else if (this.state == "idle"){
+            // console.log("Ja ongi k6ik nii korras")
+        } else {
+            if (player.position.x < this.position.x && player.position.x + 350 < this.position.x) {
                 if (!this.isStriking) {
                     setTimeout(() => {
                         this.state = "attack"

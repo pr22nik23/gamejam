@@ -2,6 +2,7 @@ import { enemiesArray, playerArray } from "./game.js"
 import { isCollision } from "./helpers.js"
 import { createHitParticles } from "./particle.js"
 import { gameStart } from "./game.js"
+import { playSound } from "./helpers.js"
 
 export default class SwordEntity {
     constructor(width, height, swingDuration, parent, damage){
@@ -40,14 +41,14 @@ export default class SwordEntity {
         } else if (this.parent.type == "enemy") {
             playerArray.forEach((player) => {
                 if(isCollision({x: player.position.x, y: player.position.y, w: player.width, h: player.height}, {x: x, y: y, w: this.width, h: this.height})){
+                    playSound("/sounds/knife_stab.mp3", { volume: 0.25 })
                     if (player.health - this.damage <= 0) {
                         player.state = "dying"
-                        setTimeout(() => {
-                            gameStart = false
-                        }, 1500)
                     }
                     createHitParticles(player.position.x + 30, player.position.y + 20)
                     player.health -= this.damage
+                }else {
+                    playSound("/sounds/knife_slash.wav", { volume: 0.25 })
                 }
             })
         }

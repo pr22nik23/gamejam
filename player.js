@@ -2,6 +2,7 @@ import { canvas, ctx, enemiesArray } from "./game.js"
 import SwordEntity from "./swordProps.js"
 import { drawPlayerFrame, updateAnimation, scaledWidth, scaledHeight } from "./playerAnimation.js";
 import { createWalkParticles, createWindParticles } from "./particle.js";
+import { playSound } from "./helpers.js";
 
 export default class Player {
 
@@ -46,6 +47,18 @@ export default class Player {
     update(keys) {
         this.draw()
         if (this.state == "dying"){
+            this.isJumping = false
+            if (this.position.y < this.groundLevel){
+                if (this.position.y + this.velocity.y > this.groundLevel){
+                    this.position.y = this.groundLevel
+                }
+                this.position.y += this.velocity.y
+            }else if (this.position.y > this.groundLevel) {
+                if (this.position.y - this.velocity.y < this.groundLevel){
+                    this.position.y = this.groundLevel
+                }
+                this.position.y -= this.velocity.y
+            }
             return
         }
         if (keys['KeyA'] && this.position.x > 0) {
@@ -92,6 +105,7 @@ export default class Player {
             this.position.x += this.velocity.x;
         }
         if (keys['KeyW'] && this.jumpCounter < this.maxJumps && !this.wPressed) {
+            playSound("/sounds/jump.wav")
             this.wPressed = true
             this.isJumping = true
             this.jumpStartTime = performance.now();
@@ -102,6 +116,7 @@ export default class Player {
             if (!this.sword.isSwinging && this.sword.swingFrame < 1) {
                 this.sword.isSwinging = true
                 this.sword.swingFrame++;
+                playSound("/sounds/lightsaber.mp3", { volume: 0.15, playbackRate: 2})
                 if (this.direction == "right") {
                     this.sword.update(this.position.x + this.width, this.position.y )
                     this.sword.swing(this.position.x + this.width, this.position.y )

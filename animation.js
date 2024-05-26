@@ -6,7 +6,7 @@ export const scaledHeight = scale * height;
 
 
 const moveCycle = [0, 1, 2, 3, 4, 5, 6, 7]; // Frames for idle animation
-const idleCycle = [0, 1, 2, 3, 4, 5, 6] // Frames for run animation
+const idleCycle = [0, 1, 2, 3, 4, 5] // Frames for run animation
 const attackCycle = [0, 1, 2, 3]; // Frames for attack animation
 
 const jumpCycle = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]; // Frames for jump animation
@@ -20,7 +20,7 @@ const hurtCycle = [0, 1]
 // export let currentLoopIndex = 0;
 
 
-const pasahunnik = { "direction": 1000, "swing": 400, "jump": 1000, "death": 1000 }
+const pasahunnik = { "direction": 1000, "swing": 400, "jump": 1000, "death": 1000, "idle": 1000 }
 
 export function drawEnemyFrame(ctx, canvasX, canvasY, enemy, enemyImg) {
     const { cycle, rowOffset } = getAnimationCycle(enemy);
@@ -55,6 +55,9 @@ function getAnimationCycle(enemy) {
             enemy.currentLoopIndex = 0
         }
         return { cycle: deathCycle, rowOffset: 3, style: "death" };
+    }
+    if (enemy.state == "idle"){
+        return { cycle: idleCycle, rowOffset: 2, style: "idle" };
     }
     if (enemy.sword.isSwinging || !enemy.isStalled) {
         if (enemy.firstSwing) {

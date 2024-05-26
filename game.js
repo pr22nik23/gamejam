@@ -2,6 +2,7 @@ import Enemy from "./enemy.js";
 import Player from "./player.js";
 import Stats from "./stats.js";
 import { animate } from "./particle.js";
+import { playSound } from "./helpers.js";
 let background = new Image()
 let enemyImg1 = new Image();
 let enemyImg2 = new Image();
@@ -87,7 +88,17 @@ window.addEventListener('keyup', (e) => {
         player.wPressed = false
         player.firstJump = true
     }else if (e.code == 'KeyP'){
-        enemiesArray.push(e)
+        let enemy = new Enemy({
+            position: { x: canvas.width - 100, y: canvas.height - 100 },
+            velocity: { x: 1 + currentLevel + 10, y: 20 },
+            props: {
+                type: "enemy1",
+                image: enemyImg1,
+            },
+            damage: 5,
+            health: 5
+        })
+        enemiesArray.push(enemy)
     }
     let allFalse = true;
     Object.entries(keys).map(([_, value]) => {
@@ -213,6 +224,9 @@ function gameLoop() {
         player.update(keys)
         enemiesArray.forEach((e) => {
             e.update()
+            if(player.state == "dying"){
+                e.state = "idle"
+            }
         })
         stats.update(timer)
         levelLoop()
@@ -294,4 +308,4 @@ function displayMessage(message, delay) {
 beforeGame()
 
 // startGame()
-// playSound('/sounds/testSound.mp3')
+playSound('/sounds/theme.mp3', { volume: 0.4 })
