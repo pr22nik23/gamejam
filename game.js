@@ -19,7 +19,7 @@ export const ctx = canvas.getContext('2d');
 export const killsElement = document.querySelector(".kills")
 export const damageElement = document.querySelector(".damage")
 export const levelElement = document.querySelector(".level")
-console.log(killsElement)
+// console.log(killsElement)
 const allButtons = document.querySelectorAll('.button')
 const restartBUtton = document.querySelector('.restart')
 export const endScreen = document.querySelector('.finish')
@@ -353,7 +353,7 @@ function displayInfo(message, delay, color) {
 
     // Apply styles for appearance
     const containerMiddle = document.body.clientWidth / 2
-    console.log(containerMiddle)
+    // console.log(containerMiddle)
     messageContainer.style.opacity = "1";
     messageContainer.style.left = `${containerMiddle - 362}px`
     messageContainer.style.top = "260px"

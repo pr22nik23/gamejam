@@ -95,7 +95,7 @@ export default class Enemy {
         this.nearestWall = (this.position.x > canvas.width / 2) ? 'right' : 'left'
 
         // console.log("Distance", player.distanceFromNearestWall, "wall", player.nearestWall)
-        console.log(this.state)
+        // console.log(this.state)
         if (this.liveState == "death") {
             this.jumpCoolDown = 99999999999999;
             return

@@ -18,9 +18,9 @@ let currentLoopIndex = 0;
 
 const pasahunnik = { "jump": 600, "swing": 100, "direction": 600, "test": 600, "death": 1500 }
 
-playerImg.onload = function () {
-    console.log("Playermodel loaded.");
-};
+// playerImg.onload = function () {
+//     console.log("Playermodel loaded.");
+// };
 
 // Define a helper function to draw a frame
 export function drawFrame(ctx, img, frameX, frameY, canvasX, canvasY) {
@@ -33,7 +33,7 @@ export function drawFrame(ctx, img, frameX, frameY, canvasX, canvasY) {
 function getAnimationCycle(player) {
     if (player.state == "dying"){
         if (player.firstDying) {
-            console.log("TEST")
+            // console.log("TEST")
             player.firstDying = false
             currentLoopIndex = 0
         }
