@@ -21,8 +21,15 @@ export default class SwordEntity {
             enemiesArray.forEach((enemy) => {
                 if(isCollision({x: enemy.position.x, y: enemy.position.y, w: enemy.width, h: enemy.height}, {x: x, y: y, w: this.width, h: this.height})){
                     if (enemy.health - this.damage <= 0){
+                        if(enemy.liveState != "death"){
+                            this.parent.kills++;
+                            this.parent.totalDamage += this.damage
+                        }
                         enemiesToRemove.push(enemy)
                         enemy.liveState = "death"
+                    }
+                    if(enemy.liveState != "death") {
+                        this.parent.totalDamage += this.damage
                     }
                     enemy.health -= this.damage
                     createHitParticles(enemy.position.x + 30, enemy.position.y + 20)

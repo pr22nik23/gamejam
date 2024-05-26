@@ -7,11 +7,11 @@ let background = new Image()
 let enemyImg1 = new Image();
 let enemyImg2 = new Image();
 export let overlay = new Image()
-overlay.src = "/models/overlay3.png"
+overlay.src = "/models/overlay4.png"
 
 enemyImg1.src = 'models/enemy1.png'
 enemyImg2.src = 'models/enemy3.png'
-background.src = 'models/kood-bg2.png'
+background.src = 'models/kood-final.png'
 export let gameStart = false;
 
 export const canvas = document.getElementById('gameCanvas');
@@ -148,8 +148,13 @@ function calcTimer() {
 }
 
 let isSpawning = false
+let firstRound = true
 function levelLoop() {
     if (enemiesArray.length == 0 && !isSpawning) {
+        if (!firstRound){
+            playSound(`/sounds/${Math.floor(Math.random() * 5) + 1}.wav`, { volume: 0.8 })
+        }
+        firstRound= false
         isSpawning = true
         //Give player back little bit of health
         player.health += currentLevel * 5
@@ -257,11 +262,17 @@ function startGame() {
 }
 
 function beforeGame() {
-    displayMessage("tere hommikust eesti rahvas", 2000)
+    displayMessage("Gopnik combat", 2000)
+    setTimeout(() => {
+    displayMessage("Defend kood/Johvi", 2000)
+
+    }, 2500)
     for (let i = 0; i < 10; i++){
         setTimeout(() => {
             if (i == 9) {
                 gameStart = true
+                playSound('/sounds/fight.wav', { volume: 0.4 })
+
                 startGame()
             }
             if (i >= 5){

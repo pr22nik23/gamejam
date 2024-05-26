@@ -34,6 +34,8 @@ export default class Player {
         this.firstDying = true
         this.state = "alive"
         this.lastParticle = 0;
+        this.kills = 0;
+        this.totalDamage = 0;
     }
 
     draw() {

@@ -9,7 +9,7 @@ export default class Stats {
 
     draw() {
         ctx.fillStyle = "#FF3131"
-        ctx.fillRect(50, 60, canvas.width / 2 - 100, 25)
+        ctx.fillRect(50, 50, canvas.width / 2 - 100, 45)
         this.drawPlayerHealth()
     }
 
@@ -26,7 +26,7 @@ export default class Stats {
 
         ctx.fillStyle = "#00bf63"
         // let multiplier = this.player.health > 0 ? this.player.health / 100 : 0
-        ctx.fillRect(50, 60, (canvas.width / 2 - 100) * multiplier, 25)
+        ctx.fillRect(50, 50, (canvas.width / 2 - 100) * multiplier, 45)
     }
 
     drawHud(timer) {
@@ -37,7 +37,7 @@ export default class Stats {
 
     drawTime(timer) {
         let x = canvas.width / 2 - 50;
-        let y = 50;
+        let y = 49;
         let width = 100;
         let height = 50;
         let radius = 10;
@@ -55,7 +55,7 @@ export default class Stats {
         ctx.arcTo(x, y, x + radius, y, radius);
         ctx.closePath();
 
-        ctx.fillStyle = "#0CC0DF";
+        ctx.fillStyle = "#FFC107";
         ctx.fill();
         ctx.lineWidth = 4;
         ctx.strokeStyle = "black";
@@ -66,6 +66,34 @@ export default class Stats {
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText((timer / 1000), canvas.width / 2, 75);
+    }
+
+
+    drawStats() {
+          
+    const text = 'Diagonal Text';
+    const x = 500; // x coordinate of where to start the text
+    const y = 300; // y coordinate of where to start the text
+    const angle = -30; // Angle in degrees to rotate the text
+
+    // Translate to the point where you want to rotate
+    ctx.translate(x, y);
+
+    // Convert degrees to radians
+    const radians = angle * Math.PI / 180;
+
+    // Rotate the canvas context
+    ctx.rotate(radians);
+
+    // Set the text properties
+    ctx.font = '20px Arial';
+    ctx.fillStyle = 'black';
+    
+    // Draw the text (after rotation)
+    ctx.fillText(text, 0, 0);
+
+    // Reset the transformation matrix to the identity matrix
+
     }
 
 
