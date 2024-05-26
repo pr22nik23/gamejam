@@ -190,7 +190,6 @@ function levelLoop() {
         isSpawning = true
         //Give player back little bit of health
         player.health += currentLevel * 10
-        player.sword.damage += currentLevel * 2
         //give player speed every 5th round
         levelElement.textContent = `Level: ${currentLevel}`
         currentLevel++
