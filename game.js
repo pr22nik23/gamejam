@@ -163,7 +163,7 @@ function enemyLogic() {
 
 function calcTimer() {
     const currentTime = performance.now()
-    if (currentTime - 10000 - timer >= 1000 && player.state != 'dying') {
+    if (currentTime - 13000 - timer >= 1000 && player.state != 'dying') {
         timer += 1000
     }
 }
