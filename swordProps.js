@@ -1,6 +1,7 @@
-import { ctx, enemiesArray, playerArray } from "./game.js"
+import { enemiesArray, playerArray } from "./game.js"
 import { isCollision } from "./helpers.js"
 import { createHitParticles } from "./particle.js"
+import { gameStart } from "./game.js"
 
 export default class SwordEntity {
     constructor(width, height, swingDuration, parent, damage){
@@ -41,6 +42,9 @@ export default class SwordEntity {
                 if(isCollision({x: player.position.x, y: player.position.y, w: player.width, h: player.height}, {x: x, y: y, w: this.width, h: this.height})){
                     if (player.health - this.damage <= 0) {
                         player.state = "dying"
+                        setTimeout(() => {
+                            gameStart = false
+                        }, 1500)
                     }
                     createHitParticles(player.position.x + 30, player.position.y + 20)
                     player.health -= this.damage
@@ -50,8 +54,8 @@ export default class SwordEntity {
     }
 
     draw(x,y) {
-        ctx.fillStyle = "blue"
-        ctx.fillRect(x, y, this.width, this.height);
+        // ctx.fillStyle = "blue"
+        // ctx.fillRect(x, y, this.width, this.height);
     }
 
     update(x,y) {

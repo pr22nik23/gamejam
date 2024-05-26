@@ -1,9 +1,6 @@
-let enemyImg = new Image();
-enemyImg.src = 'models/enemy1.png';
-
 const scale = 2; // Adjusted scale to match enemy hitbox
 const width = 128;
-const height = 130;
+const height = 128.5;
 export const scaledWidth = scale * width;
 export const scaledHeight = scale * height;
 
@@ -11,7 +8,10 @@ export const scaledHeight = scale * height;
 const moveCycle = [0, 1, 2, 3, 4, 5, 6, 7]; // Frames for idle animation
 const idleCycle = [0, 1, 2, 3, 4, 5, 6] // Frames for run animation
 const attackCycle = [0, 1, 2, 3]; // Frames for attack animation
+
 const jumpCycle = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]; // Frames for jump animation
+const jumpCycle1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]; // Frames for jump animation
+
 const deathCycle = [0, 1, 2, 3]; // Frames for jump animation
 const hurtCycle = [0, 1]
 
@@ -22,7 +22,7 @@ const hurtCycle = [0, 1]
 
 const pasahunnik = { "direction": 1000, "swing": 400, "jump": 1000, "death": 1000 }
 
-export function drawEnemyFrame(ctx, canvasX, canvasY, enemy) {
+export function drawEnemyFrame(ctx, canvasX, canvasY, enemy, enemyImg) {
     const { cycle, rowOffset } = getAnimationCycle(enemy);
 
     const frame = cycle[enemy.currentLoopIndex];
@@ -72,6 +72,7 @@ function getAnimationCycle(enemy) {
         enemy.firstDirection = true
 
         return { cycle: jumpCycle, rowOffset: 1, style: "jump" };
+
     }else if (enemy.direction === "left" || enemy.direction === "right") {
         if (enemy.firstDirection) {
             enemy.firstDirection = false

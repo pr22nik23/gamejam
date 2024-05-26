@@ -1,7 +1,7 @@
 let playerImg = new Image();
 playerImg.src = 'models/obi.png';
 
-const scale = 2.5; // Adjusted scale to match player hitbox
+const scale = 2.7; // Adjusted scale to match player hitbox
 const width = 100; // Width of each sprite frame
 const height = 100.5; // Height of each sprite frame
 export const scaledWidth = scale * width;
@@ -12,6 +12,7 @@ const moveCycle = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]; // Frames for run 
 const attackCycle = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]; // Frames for attack animation
 const jumpCycle = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; // Frames for jump animation
 const deathCycle = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]; // Frames for jump animation
+const playerWin = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
 
 let currentLoopIndex = 0;
 

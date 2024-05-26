@@ -1,7 +1,7 @@
 import { canvas, ctx, enemiesArray } from "./game.js"
 import SwordEntity from "./swordProps.js"
 import { drawPlayerFrame, updateAnimation, scaledWidth, scaledHeight } from "./playerAnimation.js";
-import { createWalkParticles } from "./particle.js";
+import { createWalkParticles, createWindParticles } from "./particle.js";
 
 export default class Player {
 
@@ -19,7 +19,7 @@ export default class Player {
         this.maxJumps = 2
         this.jumpCounter = 0
         this.groundLevel = canvas.height - this.height; // Assuming the ground is at the bottom of the canvas
-        this.sword = new SwordEntity(100, this.height, 10, this, 100)
+        this.sword = new SwordEntity(100, this.height, 10, this, 20)
         this.direction = "idle"
         this.wPressed = false;
         this.dashCooldown = 3000;
@@ -36,8 +36,6 @@ export default class Player {
     }
 
     draw() {
-        ctx.fillStyle = "red";
-        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
         updateAnimation(this);
         // // Adjusting sprite to align with the player hitbox
         const spriteX = this.position.x - (scaledWidth - this.width) / 2; // Centering the sprite horizontally
@@ -97,6 +95,8 @@ export default class Player {
             this.wPressed = true
             this.isJumping = true
             this.jumpStartTime = performance.now();
+            createWindParticles(this.position.x + 20, this.position.y)
+            createWindParticles(this.position.x + 40, this.position.y)
         }
         if (keys['Space']) {
             if (!this.sword.isSwinging && this.sword.swingFrame < 1) {
@@ -106,8 +106,8 @@ export default class Player {
                     this.sword.update(this.position.x + this.width, this.position.y )
                     this.sword.swing(this.position.x + this.width, this.position.y )
                 } else if (this.direction == "left"){
-                    this.sword.update(this.position.x - this.width, this.position.y )
-                    this.sword.swing(this.position.x - this.width, this.position.y )
+                    this.sword.update(this.position.x - this.width-60, this.position.y )
+                    this.sword.swing(this.position.x - this.width-60, this.position.y )
                 }else {
                     let enemy;
                     let lastVal = 99999999
@@ -123,8 +123,8 @@ export default class Player {
                             this.sword.update(this.position.x + this.width, this.position.y )
                             this.sword.swing(this.position.x + this.width, this.position.y )
                         } else {
-                            this.sword.update(this.position.x - this.width, this.position.y )
-                            this.sword.swing(this.position.x - this.width, this.position.y )
+                            this.sword.update(this.position.x - this.width -60, this.position.y )
+                            this.sword.swing(this.position.x - this.width -60, this.position.y )
                         }
                     }
                 }

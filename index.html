@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="h-screen">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,17 +11,86 @@
             margin: auto;
             background-color: #000;
         }
+
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('assets/ThaleahFat.ttf') format('truetype');
+        }
+
+        body {
+            font-family: 'CustomFont', Arial, sans-serif;
+            /* Default to the custom font */
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .test {
+            top: -1.5em;
+            right: -1.5em;
+            bottom: -1.5em;
+            left: -1.5em;
+            border: inherit;
+            border-color: transparent;
+            background: inherit;
+            background-clip: border-box;
+            content: ''
+        }
     </style>
+
 </head>
-<body class="flex flex-col justify-center items-center h-full">
-    <div>
-        <h1 id="playerHealth">
-        </h1>
-        <h1 id="enemyHealth">
-        </h1>
+
+<body class="flex flex-col justify-center blur-none items-center h-full relative filter-none">
+    <div class="bg-[url('/models/kood-bg2.png')] bg-cover absolute z-0 w-[120%] h-[120%] blur">
     </div>
-    <canvas id="gameCanvas"></canvas>
+    <div class="bg-black bg-cover absolute z-0 w-[110%] h-[110%] blur opacity-50 test">
+    </div>
+    <div class="flex top-[800px] left-[25%] absolute z-50 gap-20">
+        <div class="flex flex-col gap-2  text-center items-center">
+            <div>
+                <div class="w-8 h-8 rounded bg-white button" data-value="KeyW">W</div>
+            </div>
+            <div class="flex gap-2">
+                <div value class="w-8 h-8 rounded bg-white button" data-value="KeyA">A</div>
+                <div class="w-8 h-8 rounded bg-white button" data-value="KeyS">S</div>
+                <div class="w-8 h-8 rounded bg-white button" data-value="KeyD">D</div>
+            </div>
+            <div>
+                <h1 class="text-3xl text-white">
+                    Player Movements
+                </h1>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2">
+            <div class="w-20 h-8 bg-white rounded text-center mt-10 button" data-value="Space">
+                Space
+            </div>
+            <div>
+                <h1 class="text-3xl text-white text-center">
+                    Jump
+                </h1>
+            </div>
+        </div>
+        <div class="flex flex-col justify-center items-center gap-2">
+            <div class="flex w-20 h-8 items-center justify-center bg-white rounded text-center mt-10 button"
+                data-value="ShiftLeft">
+                <svg class="svg-icon"
+                    style="width: 1.2em; height: 1.2em;vertical-align: middle;fill: currentColor;overflow: hidden;"
+                    viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M672 896l-320 0c-17.664 0-32-14.336-32-32l0-352-128 0c-12.928 0-24.608-7.808-29.568-19.744s-2.208-25.728 6.944-34.88l320-320c12.512-12.48 32.768-12.48 45.248 0l320 320c9.152 9.152 11.904 22.912 6.944 34.88s-16.608 19.744-29.568 19.744l-128 0 0 352c0 17.664-14.336 32-32 32zM384 832l256 0 0-352c0-17.664 14.336-32 32-32l82.752 0-242.752-242.752-242.752 242.752 82.752 0c17.664 0 32 14.336 32 32l0 352z" />
+                </svg>
+                Shift
+            </div>
+            <div>
+                <h1 class="text-3xl text-white text-center">
+                    Hold to Dash
+                </h1>
+            </div>
+        </div>
+    </div>
+    <canvas class="z-10 rounded" id="gameCanvas"></canvas>
     <script src="game.js" type="module"></script>
     <script src="https://cdn.tailwindcss.com/?plugins=forms,typography,aspect-ratio,line-clamp"></script>
 </body>
+
 </html>

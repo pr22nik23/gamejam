@@ -1,23 +1,25 @@
 import { canvas, ctx } from "./game.js"
 import SwordEntity from "./swordProps.js"
 import { drawEnemyFrame, updateAnimation, scaledWidth, scaledHeight } from "./animation.js";
+import { createWalkParticles } from "./particle.js";
 
 
 export default class Enemy {
-    constructor({ position, velocity }) {
+    constructor({ position, velocity, props, damage, health}) {
+        this.props = props
         this.type = "enemy"
         this.position = position
         this.velocity = velocity
         this.width = 50
         this.height = 110
-        this.health = 100
+        this.health = health
         this.isJumping = false;
         this.gravity = 10;
         this.jumpDuration = 3000
         this.maxJumps = 2
         this.jumpCounter = 0
         this.groundLevel = canvas.height - this.height; // Assuming the ground is at the bottom of the canvas
-        this.sword = new SwordEntity(80, 10, 10, this, 20)
+        this.sword = new SwordEntity(80, 10, 10, this, damage)
         this.direction = "right"
         this.wPressed = false;
         this.aPressCounter = 0;
@@ -48,16 +50,15 @@ export default class Enemy {
         this.liveState = "alive"
         this.currentLoopIndex = 0;
         this.lastFrame = 0;
+        this.lastParticle = 0;
     }
 
     draw() {
-        ctx.fillStyle = "green";
-        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
         updateAnimation(this);
         // Adjusting sprite to align with the player hitbox
         const spriteX = this.position.x - (scaledWidth - this.width) / 2; // Centering the sprite horizontally
         const spriteY = this.position.y - (scaledHeight - this.height); // Aligning the sprite vertically
-        drawEnemyFrame(ctx, spriteX, spriteY, this);
+        drawEnemyFrame(ctx, spriteX, spriteY, this, this.props.image);
     }
 
     update() {
@@ -71,9 +72,16 @@ export default class Enemy {
 
  
     offence(player, keys) {
+        console.log(this.state)
         if (this.liveState == "death") {
             this.jumpCoolDown = 99999999999999;
             return
+        }
+        if(this.position.y >= this.groundLevel){
+            if(performance.now() - this.lastParticle >= 200){
+                createWalkParticles(this.position.x, this.position.y + this.height)
+                this.lastParticle = performance.now()
+            }
         }
         let pDirection = this.position.x > player.position.x ? 'left' : "right"
         if (performance.now() - this.lastCalcCoords >= 1000) {
@@ -81,7 +89,7 @@ export default class Enemy {
             this.lastCalcCoords = performance.now()
         }
         if (this.state == "attack") {
-            if (player.position.x < this.position.x) {
+            if (player.position.x < this.position.x && Math.abs(player.position.y - this.position.y) <= 250) {
                 if (!this.checkBorder(this.position.x - this.velocity.x)) {
 
                     this.position.x -= this.velocity.x;
@@ -135,8 +143,8 @@ export default class Enemy {
             }
         } else if (this.state == "moveLeft") {
             // this.jumpCoolDown = 2000
-            if (this.position.x - player.position.x > 200) {
-                this.position.x -= this.velocity.x
+            if (this.position.x - player.position.x > 200 && Math.abs(player.position.y - this.position.y) <= 250) {
+                this.position.x -= 2 * this.velocity.x
                 this.direction = "left"
 
                 if (this.forceLeft) {
@@ -169,7 +177,7 @@ export default class Enemy {
             }
 
         } else if (this.state == "moveRight") {
-            if (this.position.x - player.position.x < -200) {
+            if (this.position.x - player.position.x < -200 && Math.abs(player.position.y - this.position.y) <= 250) {
                 this.position.x += this.velocity.x
                 this.direction = "right"
                 if (this.forceRight) {
@@ -201,7 +209,7 @@ export default class Enemy {
             }
 
         } else if (this.state == "hullumaja") {
-            if (Math.abs(this.position.x - player.position.x) <= 200) {
+            if (Math.abs(this.position.x - player.position.x) <= 200 && Math.abs(player.position.y - this.position.y) <= 250) {
                 this.state = "defence"
             }
             if (!this.hullumajaState) {
@@ -231,7 +239,7 @@ export default class Enemy {
                 }, this.stallCooldown)
             }
         }else {
-            if (player.position.x < this.position.x && player.position.x + 350 < this.position.x) {
+            if (player.position.x < this.position.x && player.position.x + 350 < this.position.x && Math.abs(player.position.y - this.position.y) <= 250) {
                 if (!this.isStriking) {
                     setTimeout(() => {
                         this.state = "attack"

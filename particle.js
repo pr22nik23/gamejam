@@ -41,7 +41,17 @@ export function createHitParticles(x, y) {
 
 export function createWalkParticles(x, y) {
     for (let i = 0; i < 10; i++) {
-        particlesArray.push(new Particle(x, y, 'rgba(77, 93, 98, 1)', -0.1, 0.5));
+        particlesArray.push(new Particle(x, y, 'rgba(77, 93, 98, 1)', -0.05, 0.5));
+    }
+}
+
+export function createWindParticles(x, y) {
+    for (let i = 0; i < 30; i++) {
+        const angle = Math.random() * Math.PI * 2; // Random angle
+        const radius = Math.random() * 20 + 10; // Random radius around the character
+        const windX = x + radius * Math.cos(angle);
+        const windY = y + radius * Math.sin(angle);
+        particlesArray.push(new Particle(windX, windY, 'rgba(255, 255, 255, 0.5)', -0.01, 0.3)); // Wind particles
     }
 }
 
