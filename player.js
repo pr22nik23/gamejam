@@ -19,7 +19,7 @@ export default class Player {
         this.jumpDuration = 3500
         this.maxJumps = 2
         this.jumpCounter = 0
-        this.groundLevel = canvas.height - this.height; // Assuming the ground is at the bottom of the canvas
+        this.groundLevel = canvas.height - this.height; 
         this.sword = new SwordEntity(100, this.height, 10, this, 20)
         this.direction = "idle"
         this.wPressed = false;
@@ -42,9 +42,8 @@ export default class Player {
 
     draw() {
         updateAnimation(this);
-        // // Adjusting sprite to align with the player hitbox
-        const spriteX = this.position.x - (scaledWidth - this.width) / 2; // Centering the sprite horizontally
-        const spriteY = this.position.y - (scaledHeight - this.height); // Aligning the sprite vertically
+        const spriteX = this.position.x - (scaledWidth - this.width) / 2;
+        const spriteY = this.position.y - (scaledHeight - this.height);
         drawPlayerFrame(ctx, spriteX, spriteY, this);
     }
 
@@ -150,7 +149,6 @@ export default class Player {
                 if (this.sword.swingFrame == 1) {
                     setTimeout(() => {
                         this.sword.swingFrame = 0
-                        // this.sword.isSwinging = false;
                     }, this.attackCooldown)
                     setTimeout(() => {
                         this.sword.isSwinging = false

@@ -1,24 +1,19 @@
-const scale = 2; // Adjusted scale to match enemy hitbox
+const scale = 2; 
 const width = 128;
 const height = 128.5;
 export const scaledWidth = scale * width;
 export const scaledHeight = scale * height;
 
 
-const moveCycle = [0, 1, 2, 3, 4, 5, 6, 7]; // Frames for idle animation
-const idleCycle = [0, 1, 2, 3, 4, 5] // Frames for run animation
-const attackCycle = [0, 1, 2, 3]; // Frames for attack animation
+const moveCycle = [0, 1, 2, 3, 4, 5, 6, 7]; 
+const idleCycle = [0, 1, 2, 3, 4, 5] 
+const attackCycle = [0, 1, 2, 3]; 
 
-const jumpCycle = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]; // Frames for jump animation
-const jumpCycle1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]; // Frames for jump animation
+const jumpCycle = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]; 
+const jumpCycle1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]; 
 
-const deathCycle = [0, 1, 2, 3]; // Frames for jump animation
+const deathCycle = [0, 1, 2, 3]; 
 const hurtCycle = [0, 1]
-
-
-
-// export let currentLoopIndex = 0;
-
 
 const pasahunnik = { "direction": 1000, "swing": 400, "jump": 1000, "death": 1000, "idle": 1000 }
 
@@ -27,14 +22,14 @@ export function drawEnemyFrame(ctx, canvasX, canvasY, enemy, enemyImg) {
 
     const frame = cycle[enemy.currentLoopIndex];
     const column = frame % 16;
-    const row = rowOffset; // Use the row offset based on the enemy's state
+    const row = rowOffset; 
 
     if (enemy.direction === 'left') {
-        ctx.save(); // Save the current transformation matrix
-        ctx.translate(canvasX + scaledWidth, canvasY); // Move the origin to the top-right corner of the sprite
-        ctx.scale(-1, 1); // Scale the context horizontally by -1 to flip the image
+        ctx.save(); 
+        ctx.translate(canvasX + scaledWidth, canvasY); 
+        ctx.scale(-1, 1); 
         drawFrame(ctx, enemyImg, column, row, 0, 0);
-        ctx.restore(); // Restore the previous transformation matrix
+        ctx.restore(); 
     } else {
         drawFrame(ctx, enemyImg, column, row, canvasX, canvasY);
     }

@@ -33,7 +33,6 @@ export default class SwordEntity {
                     }
                     enemy.health -= this.damage
                     createHitParticles(enemy.position.x + 30, enemy.position.y + 20)
-                    // console.log(enemy)
                 }
             })
             setTimeout(() => {
@@ -41,7 +40,6 @@ export default class SwordEntity {
                     const index = enemiesArray.indexOf(e);
                     if (index > -1) {
                         enemiesArray.splice(index, 1);
-                        // console.log("THIS IS ENEMEY ARRAY: ", enemiesArray)
                     }
                 });
             }, 1000)
@@ -63,8 +61,6 @@ export default class SwordEntity {
     }
 
     draw(x,y) {
-        // ctx.fillStyle = "blue"
-        // ctx.fillRect(x, y, this.width, this.height);
     }
 
     update(x,y) {

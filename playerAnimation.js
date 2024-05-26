@@ -18,11 +18,6 @@ let currentLoopIndex = 0;
 
 const pasahunnik = { "jump": 600, "swing": 100, "direction": 600, "test": 600, "death": 1500 }
 
-// playerImg.onload = function () {
-//     console.log("Playermodel loaded.");
-// };
-
-// Define a helper function to draw a frame
 export function drawFrame(ctx, img, frameX, frameY, canvasX, canvasY) {
     ctx.drawImage(img,
         frameX * width, frameY * height, width, height,

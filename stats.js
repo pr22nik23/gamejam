@@ -25,7 +25,6 @@ export default class Stats {
         }
 
         ctx.fillStyle = "#00bf63"
-        // let multiplier = this.player.health > 0 ? this.player.health / 100 : 0
         ctx.fillRect(50, 50, (canvas.width / 2 - 100) * multiplier, 45)
     }
 
@@ -42,7 +41,6 @@ export default class Stats {
         let height = 50;
         let radius = 10;
 
-        // Draw the rounded rectangle
         ctx.beginPath();
         ctx.moveTo(x + radius, y);
         ctx.lineTo(x + width - radius, y);
