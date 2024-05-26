@@ -161,10 +161,21 @@ function enemyLogic() {
 
 }
 
+// function calcTimer() {
+//     const currentTime = performance.now()
+//     if (currentTime - 13000 - timer >= 1000 && player.state != 'dying') {
+//         timer += 1000
+//     }
+// }
+
+let lastUpdateTime = performance.now();
+
 function calcTimer() {
-    const currentTime = performance.now()
-    if (currentTime - 13000 - timer >= 1000 && player.state != 'dying') {
-        timer += 1000
+    const currentTime = performance.now();
+
+    if (currentTime - lastUpdateTime >= 1000 && player.state != 'dying') {
+        timer += 1000;
+        lastUpdateTime = currentTime;
     }
 }
 

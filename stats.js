@@ -65,7 +65,7 @@ export default class Stats {
         ctx.font = "50px CustomFont";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText((timer / 1000), canvas.width / 2, 75);
+        ctx.fillText((timer ? timer / 1000 : 0), canvas.width / 2, 75);
     }
 
 
