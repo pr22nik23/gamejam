@@ -10,16 +10,16 @@ export let overlay = new Image()
 overlay.src = "./models/overlay4.png"
 
 
-enemyImg1.src = './models/enemy1.png'
+enemyImg1.src = 'https://pr22nik23.github.io/models/enemy1.png'
 
-enemyImg2.src = './models/enemy3.png'
+enemyImg2.src = 'https://pr22nik23.github.io/models/enemy3.png'
 
-background.src = './models/kood-final2.png'
+background.src = 'https://pr22nik23.github.io/models/kood-final2.png'
 background.onload = () => {
     beforeGame()
 
 // startGame()
-playSound('./sounds/theme.mp3', { volume: 0.3 })
+playSound('https://pr22nik23.github.io/sounds/theme.mp3', { volume: 0.3 })
 
 }
 export let gameStart = false;
