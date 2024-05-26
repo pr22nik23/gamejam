@@ -289,26 +289,27 @@ function startGame() {
 }
 
 function beforeGame() {
-    render()
-    // displayMessage("Genobi: gopnik wars", 2000, "#962A45")
-    displayMessage("Defend Ida-Virumaa!", 2000, "#962A45")
     setTimeout(() => {
-        displayMessage("May the force be with you!", 2000, "#962A45")
-
-    }, 2500)
-    for (let i = 0; i < 10; i++) {
+        render()
+        displayMessage("Defend Ida-Virumaa!", 2000, "#962A45")
         setTimeout(() => {
-            if (i == 9) {
-                gameStart = true
-                playSound('./sounds/fight.wav', { volume: 0.4 })
-
-                startGame()
-            }
-            if (i >= 5) {
-                displayMessage(`${10 - i}`, 500, "#962A45")
-            }
-        }, i * 1000)
-    }
+            displayMessage("May the force be with you!", 2000, "#962A45")
+    
+        }, 2500)
+        for (let i = 0; i < 10; i++) {
+            setTimeout(() => {
+                if (i == 9) {
+                    gameStart = true
+                    playSound('./sounds/fight.wav', { volume: 0.4 })
+    
+                    startGame()
+                }
+                if (i >= 5) {
+                    displayMessage(`${10 - i}`, 500, "#962A45")
+                }
+            }, i * 1000)
+        }
+    }, 1000)
 }
 
 
@@ -382,8 +383,6 @@ function displayInfo(message, delay, color) {
     }, delay);
 }
 
-
-// beforeGame()
 
 // // startGame()
 // playSound('/sounds/theme.mp3', { volume: 0.3 })
