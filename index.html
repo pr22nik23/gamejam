@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gopnik Kombat</title>
+    <title>Kenobi: Wars of Ida-Virumaa</title>
+    <link rel="icon" type="image/x-icon" href="/models/images.png">
     <style>
         canvas {
             display: block;
@@ -44,13 +45,19 @@
     </div>
     <div class="bg-black bg-cover absolute z-0 w-[110%] h-[110%] blur opacity-50 test">
     </div>
-    <div class="absolute">
-        <div>
-
-        </div>
-        <div>
-            
-        </div>
+    <div class="finish absolute flex flex-col w-[400px] rounded-xl h-[200px] top-1/2 left-1/2 text-white -translate-x-1/2 z-50 -translate-y-1/2 bg-black/70 justify-center items-center text-3xl hidden">
+        <p class="kills ">
+            Kills: 1000
+        </p>
+        <p class="level ">
+            Level: 50
+        </p>
+        <p class="damage ">
+            Damage: 150000
+        </p>
+        <button class="restart bg-[#FFC107] rounded-xl px-4 mt-2 text-black"> 
+            Restart
+        </button>
     </div>
     <div class="flex top-[800px] left-1/2 transform -translate-x-1/2 absolute z-50 gap-20">
         <div class="flex flex-col gap-2  text-center items-center">

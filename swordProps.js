@@ -3,6 +3,7 @@ import { isCollision } from "./helpers.js"
 import { createHitParticles } from "./particle.js"
 import { gameStart } from "./game.js"
 import { playSound } from "./helpers.js"
+import { endScreen } from "./game.js"
 
 export default class SwordEntity {
     constructor(width, height, swingDuration, parent, damage){
@@ -51,6 +52,7 @@ export default class SwordEntity {
                     playSound("/sounds/knife_stab.mp3", { volume: 0.25 })
                     if (player.health - this.damage <= 0) {
                         player.state = "dying"
+                        endScreen.classList.remove('hidden')
                     }
                     createHitParticles(player.position.x + 30, player.position.y + 20)
                     player.health -= this.damage

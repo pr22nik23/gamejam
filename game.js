@@ -16,7 +16,18 @@ export let gameStart = false;
 
 export const canvas = document.getElementById('gameCanvas');
 export const ctx = canvas.getContext('2d');
+export const killsElement = document.querySelector(".kills")
+export const damageElement = document.querySelector(".damage")
+export const levelElement = document.querySelector(".level")
+console.log(killsElement)
 const allButtons = document.querySelectorAll('.button')
+const restartBUtton = document.querySelector('.restart')
+export const endScreen = document.querySelector('.finish')
+
+restartBUtton.addEventListener('click', (event) => {
+    window.location.reload()
+})
+
 
 canvas.width = 1024;
 canvas.height = 576;
@@ -27,7 +38,7 @@ let fps = 0;
 let timer = 0;
 
 
-let currentLevel = 0;
+ let currentLevel = 0;
 
 export let playerArray = []
 export let enemiesArray = []
@@ -119,6 +130,7 @@ function render() {
     stats.draw();
     stats.drawTime(timer)
     stats.drawHud()
+    stats.drawStats()
     // stats.drawHud(timer)
 }
 
@@ -142,7 +154,7 @@ function enemyLogic() {
 
 function calcTimer() {
     const currentTime = performance.now()
-    if (currentTime - 10000 - timer >= 1000) {
+    if (currentTime - 10000 - timer >= 1000 && player.state != 'dying') {
         timer += 1000
     }
 }
@@ -157,22 +169,29 @@ function levelLoop() {
         firstRound= false
         isSpawning = true
         //Give player back little bit of health
-        player.health += currentLevel * 5
+        player.health += currentLevel * 10
+        player.sword.damage += currentLevel * 2
         //give player speed every 5th round
+        levelElement.textContent = `Level: ${currentLevel}`
         currentLevel++
         if(currentLevel % 4 === 0){
-            if (!player.dashCooldown >= 1000){
+            // if (!player.dashCooldown >= 1000){
                 player.dashCooldown -= 1000
-            }
+                displayInfo("Dash cooldown reduced", 3000, "#FFC107")
+            // }
         }
         if(currentLevel % 5 === 0){
             player.maxJumps++;
+            displayInfo("Max jumps increased", 3000, "#FFC107")
         }
         if (currentLevel % 3 === 0) {
-            console.log("Gave player some speed")
+            displayInfo("Speed increase", 3000, "#FFC107")
             player.velocity.x += 1
         }
-        displayMessage(`LVL ${currentLevel}`, 2000)
+        setTimeout(() => {
+            displayMessage(`LVL ${currentLevel}`, 2000,"#962A45")
+
+        }, 1000)
         setTimeout(() => {
             for(let i = 0; i < currentLevel; i++){
                 setTimeout(() => {
@@ -222,9 +241,9 @@ function levelLoop() {
 
 function gameLoop() {
     if (gameStart) {
+        
         const startTime = performance.now();
     
-        // console.log("FPS", fps)
         render();
         player.update(keys)
         enemiesArray.forEach((e) => {
@@ -262,9 +281,10 @@ function startGame() {
 }
 
 function beforeGame() {
-    displayMessage("Gopnik combat", 2000)
+    // displayMessage("Genobi: gopnik wars", 2000, "#962A45")
+    displayMessage("Defend Ida-Virumaa!", 2000, "#962A45")
     setTimeout(() => {
-    displayMessage("Defend kood/Johvi", 2000)
+    displayMessage("May the force be with you!", 2000, "#962A45")
 
     }, 2500)
     for (let i = 0; i < 10; i++){
@@ -276,14 +296,14 @@ function beforeGame() {
                 startGame()
             }
             if (i >= 5){
-                displayMessage(`${10-i}`, 500)
+                displayMessage(`${10-i}`, 500, "#962A45")
             }
         }, i * 1000)
     }
 }
 
 
-function displayMessage(message, delay) {
+function displayMessage(message, delay, color) {
     const messageContainer = document.createElement("h1");
     messageContainer.textContent = message;
     messageContainer.style.position = "absolute";
@@ -301,6 +321,7 @@ function displayMessage(message, delay) {
     // Apply styles for appearance
     messageContainer.style.opacity = "1";
     messageContainer.style.transform = "translateY(-50%)";
+    messageContainer.style.color = color
 
     // Schedule removal after 2 seconds
     setTimeout(() => {
@@ -315,8 +336,45 @@ function displayMessage(message, delay) {
     }, delay);
 }
 
+function displayInfo(message, delay, color) {
+    const messageContainer = document.createElement("h1");
+    messageContainer.textContent = message;
+    messageContainer.style.position = "absolute";
+    messageContainer.style.zIndex = 50;
+    messageContainer.style.fontSize = "45px";
+
+    // Apply transition for smooth appearance and disappearance
+    messageContainer.style.transition = "opacity 0.5s ease-in, transform 0.5s ease-out";
+    
+    document.body.appendChild(messageContainer);
+
+    // Triggering reflow to make the transition work
+    void messageContainer.offsetWidth;
+
+    // Apply styles for appearance
+    const containerMiddle = document.body.clientWidth / 2
+    console.log(containerMiddle)
+    messageContainer.style.opacity = "1";
+    messageContainer.style.left = `${containerMiddle - 362}px`
+    messageContainer.style.top = "260px"
+    messageContainer.style.transform = "translateY(50%)";
+    messageContainer.style.color = color
+
+    // Schedule removal after 2 seconds
+    setTimeout(() => {
+        // Apply styles for disappearance
+        messageContainer.style.opacity = "0";
+        messageContainer.style.transform = "translateY(-20%) scale(0.9)";
+        
+        // Remove the message container after the transition
+        setTimeout(() => {
+            document.body.removeChild(messageContainer);
+        }, 500); // Adjust the timing to match the transition duration
+    }, delay);
+}
+
 
 beforeGame()
 
 // startGame()
-playSound('/sounds/theme.mp3', { volume: 0.4 })
+playSound('/sounds/theme.mp3', { volume: 0.3 })

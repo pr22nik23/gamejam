@@ -5,7 +5,7 @@ import { createWalkParticles } from "./particle.js";
 
 
 export default class Enemy {
-    constructor({ position, velocity, props, damage, health}) {
+    constructor({ position, velocity, props, damage, health }) {
         this.props = props
         this.type = "enemy"
         this.position = position
@@ -51,6 +51,7 @@ export default class Enemy {
         this.currentLoopIndex = 0;
         this.lastFrame = 0;
         this.lastParticle = 0;
+        this.nearestWall = 'right';
     }
 
     draw() {
@@ -67,18 +68,18 @@ export default class Enemy {
             this.lastJumped = performance.now()
             this.isJumping = true
         }
-        if (this.state != "idle"){
+        if (this.state != "idle") {
             this.jump()
             // this.isJumping = false
-        }else if (this.state == "idle") {
+        } else if (this.state == "idle") {
             this.isJumping = false
-            if (this.position.y < this.groundLevel){
-                if (this.position.y + this.velocity.y > this.groundLevel){
+            if (this.position.y < this.groundLevel) {
+                if (this.position.y + this.velocity.y > this.groundLevel) {
                     this.position.y = this.groundLevel
                 }
                 this.position.y += this.velocity.y
-            }else if (this.position.y > this.groundLevel) {
-                if (this.position.y - this.velocity.y < this.groundLevel){
+            } else if (this.position.y > this.groundLevel) {
+                if (this.position.y - this.velocity.y < this.groundLevel) {
                     this.position.y = this.groundLevel
                 }
                 this.position.y -= this.velocity.y
@@ -86,15 +87,21 @@ export default class Enemy {
         }
     }
 
- 
+
     offence(player, keys) {
         // console.log(this.state)
+        player.distanceFromNearestWall = Math.abs(player.position.x - canvas.width)
+        player.nearestWall = (player.position.x > canvas.width / 2) ? 'right' : 'left'
+        this.nearestWall = (this.position.x > canvas.width / 2) ? 'right' : 'left'
+
+        // console.log("Distance", player.distanceFromNearestWall, "wall", player.nearestWall)
+        console.log(this.state)
         if (this.liveState == "death") {
             this.jumpCoolDown = 99999999999999;
             return
         }
-        if(this.position.y >= this.groundLevel){
-            if(performance.now() - this.lastParticle >= 200){
+        if (this.position.y >= this.groundLevel) {
+            if (performance.now() - this.lastParticle >= 200) {
                 createWalkParticles(this.position.x, this.position.y + this.height)
                 this.lastParticle = performance.now()
             }
@@ -124,11 +131,11 @@ export default class Enemy {
                     this.sword.isSwinging = false
                 }, 300)
                 if (this.direction == "right") {
-                    this.sword.update(this.position.x + this.width, this.position.y )
-                    this.sword.swing(this.position.x + this.width, this.position.y )
+                    this.sword.update(this.position.x + this.width, this.position.y)
+                    this.sword.swing(this.position.x + this.width, this.position.y)
                 } else {
-                    this.sword.update(this.position.x - this.width, this.position.y )
-                    this.sword.swing(this.position.x - this.width, this.position.y )
+                    this.sword.update(this.position.x - this.width, this.position.y)
+                    this.sword.swing(this.position.x - this.width, this.position.y)
                 }
                 if (this.sword.swingFrame == 1) {
                     setTimeout(() => {
@@ -147,15 +154,36 @@ export default class Enemy {
                 this.state = "attack"
             }
             if (pDirection == "right") {
+                if (this.nearestWall == player.nearestWall && player.distanceFromNearestWall > canvas.width - 200 ) {
+                    this.state = "forceRight"
+                }
                 if (!this.checkBorder(this.position.x - this.velocity.x)) {
+
                     this.position.x -= this.velocity.x
                     this.direction = "left"
                 }
             } else {
+                if (this.nearestWall == player.nearestWall && player.distanceFromNearestWall < 200) {
+                    // this.position.x -= this.velocity.x
+                    this.state = "forceLeft"
+                }
                 if (!this.checkBorder(this.position.x + this.velocity.x)) {
                     this.position.x += this.velocity.x
                     this.direction = "right"
                 }
+            }
+        } else if (this.state == "forceRight"){
+            if (!this.checkBorder(this.position.x +3*this.velocity.x)){
+                this.position.x += 3 * this.velocity.x
+                this.direction = "right"
+            }
+
+        } else if (this.state == "forceLeft") {
+            if (!this.checkBorder(this.position.x - 3 * this.velocity.x)) {
+                // this.position.x += this.velocity.x
+                // this.direction = "right"
+                this.position.x -= 3 * this.velocity.x
+                this.direction = "left"
             }
         } else if (this.state == "moveLeft") {
             // this.jumpCoolDown = 2000
@@ -247,14 +275,14 @@ export default class Enemy {
                 }
             }
         } else if (this.state == "stall") {
-            if (this.isStalled){
+            if (this.isStalled) {
                 this.isStalled = false
                 setTimeout(() => {
                     this.isStalled = true
                     this.state = "defence"
                 }, this.stallCooldown)
             }
-        }else if (this.state == "idle"){
+        } else if (this.state == "idle") {
             // console.log("Ja ongi k6ik nii korras")
         } else {
             if (player.position.x < this.position.x && player.position.x + 350 < this.position.x) {

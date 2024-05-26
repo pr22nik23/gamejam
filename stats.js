@@ -1,4 +1,4 @@
-import { canvas, ctx, overlay } from "./game.js";
+import { canvas, ctx, damageElement, killsElement, overlay } from "./game.js";
 
 export default class Stats {
     constructor(player, enemies, time) {
@@ -16,11 +16,11 @@ export default class Stats {
 
     drawPlayerHealth() {
         let multiplier;
-        if (this.player.health > 0 && this.player.health <= 100 ) {
+        if (this.player.health > 0 && this.player.health <= 100) {
             multiplier = this.player.health / 100
-        }else if (this.player.health <= 0 ) {
+        } else if (this.player.health <= 0) {
             multiplier = 0
-        }else {
+        } else {
             multiplier = 1
         }
 
@@ -30,8 +30,8 @@ export default class Stats {
     }
 
     drawHud(timer) {
-            ctx.drawImage(overlay, 0, 35, canvas.width / 2, 75)
-            this.drawTime(timer)
+        ctx.drawImage(overlay, 0, 35, canvas.width / 2, 75)
+        this.drawTime(timer)
 
     }
 
@@ -70,30 +70,25 @@ export default class Stats {
 
 
     drawStats() {
-          
-    const text = 'Diagonal Text';
-    const x = 500; // x coordinate of where to start the text
-    const y = 300; // y coordinate of where to start the text
-    const angle = -30; // Angle in degrees to rotate the text
+        const killsText = `Kills:${this.player.kills}`;
+        killsElement.textContent = `Kills: ${this.player.kills}`
+        const damageText = "Damage:"
+        damageElement.textContent = `Damage: ${this.player.totalDamage}`
+        const damageNumber = `${this.player.totalDamage}`
+        const angle = -7; 
 
-    // Translate to the point where you want to rotate
-    ctx.translate(x, y);
 
-    // Convert degrees to radians
-    const radians = angle * Math.PI / 180;
+        const radians = angle * Math.PI / 180;
+        ctx.rotate(radians);
 
-    // Rotate the canvas context
-    ctx.rotate(radians);
+        ctx.font = '30px CustomFont';
+        ctx.fillStyle = '#738256';
 
-    // Set the text properties
-    ctx.font = '20px Arial';
-    ctx.fillStyle = 'black';
-    
-    // Draw the text (after rotation)
-    ctx.fillText(text, 0, 0);
+        ctx.fillText(killsText, 702, 305);
+        ctx.fillText(damageText, 704, 325);
+        ctx.fillText(damageNumber, 710, 343);
 
-    // Reset the transformation matrix to the identity matrix
-
+        ctx.setTransform(1, 0, 0, 1, 0, 0);       
     }
 
 

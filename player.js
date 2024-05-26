@@ -36,6 +36,8 @@ export default class Player {
         this.lastParticle = 0;
         this.kills = 0;
         this.totalDamage = 0;
+        this.distanceFromNearestWall = 0;
+        this.nearestWall = "left";
     }
 
     draw() {
